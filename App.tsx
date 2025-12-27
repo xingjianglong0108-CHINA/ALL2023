@@ -223,7 +223,7 @@ export default function App() {
               <StomatitisGrade 
                 grade="1 级" 
                 ctcae="无症状或症状轻微；仅有红斑"
-                treatment="1. 谷氨酰胺 0.3g/kg.d 分次 po；2. 依信含漱(尽量 >30s/次) qid，漱口后暂禁水食；3. 保持口腔清洁，避免硬食。"
+                treatment="1. 谷氨酰胺 0.3g/kg.d 分次 po；2. 依信含漱(尽量 &gt; 30s/次) qid，漱口后暂禁水食；3. 保持口腔清洁，避免硬食。"
               />
               <StomatitisGrade 
                 grade="2 级" 
@@ -234,7 +234,7 @@ export default function App() {
                 grade="3 级" 
                 ctcae="严重疼痛；干扰进食，仅能进流食"
                 treatment="1. 延续 2 级处理；2. 贝复新(重组牛成纤维细胞生长因子)涂患处 q12h；3. 曲安奈德软膏涂溃疡处 tid；4. 必要时巨和粒含漱。"
-                alert="ANC < 0.5 或伴感染者需开始全身抗感染治疗。"
+                alert="ANC &lt; 0.5 或伴感染者需开始全身抗感染治疗。"
               />
               <StomatitisGrade 
                 grade="4 级" 
@@ -260,13 +260,13 @@ export default function App() {
           <div className="max-w-4xl mx-auto space-y-6 animate-in slide-in-from-right-8 duration-500">
              <header>
                 <h2 className="text-2xl font-bold text-slate-800">高白细胞白血病的处理</h2>
-                <p className="text-slate-500 text-sm">定义：WBC > 100 × 10⁹/L | 紧急并发症预防建议</p>
+                <p className="text-slate-500 text-sm">定义：WBC &gt; 100 × 10⁹/L | 紧急并发症预防建议</p>
              </header>
 
              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-slate-200">
                    <h3 className="font-bold flex items-center gap-2 mb-4 text-red-600"><Flame size={18}/> 核心风险与监测</h3>
-                   <p className="text-xs text-slate-500 leading-relaxed mb-4">WBC > 100 时脑出血风险增高，WBC > 300/400 为重症. 主因白细胞淤滞导致脑/肺栓塞。</p>
+                   <p className="text-xs text-slate-500 leading-relaxed mb-4">WBC &gt; 100 时脑出血风险增高，WBC &gt; 300/400 为重症. 主因白细胞淤滞导致脑/肺栓塞。</p>
                    <div className="space-y-2">
                       <div className="flex justify-between p-2 bg-slate-50 rounded-lg text-xs"><span>头颅 CT</span><span className="font-bold">评估颅内出血</span></div>
                       <div className="flex justify-between p-2 bg-slate-50 rounded-lg text-xs"><span>PLT 维持</span><span className="font-bold">30 - 50k</span></div>
@@ -277,8 +277,8 @@ export default function App() {
                 <div className="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-slate-200">
                    <h3 className="font-bold flex items-center gap-2 mb-4 text-blue-600"><Zap size={18}/> 减负与水化建议</h3>
                    <ul className="text-xs text-slate-600 space-y-3">
-                      <li className="flex gap-2"><div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1 shrink-0"/><b>羟基脲 (HU)：</b>100mg/kg.d 分次口服，Q12H 监测，WBC < 100 后停药。</li>
-                      <li className="flex gap-2"><div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1 shrink-0"/><b>输血限制：</b>WBC > 100 尽量不输红细胞，除非 Hb < 40g/L，且需分次少量 (5ml/kg)。</li>
+                      <li className="flex gap-2"><div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1 shrink-0"/><b>羟基脲 (HU)：</b>100mg/kg.d 分次口服，Q12H 监测，WBC &lt; 100 后停药。</li>
+                      <li className="flex gap-2"><div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1 shrink-0"/><b>输血限制：</b>WBC &gt; 100 尽量不输红细胞，除非 Hb &lt; 40g/L，且需分次少量 (5ml/kg)。</li>
                       <li className="flex gap-2"><div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1 shrink-0"/><b>水化：</b>3000ml/m².d，不建议碱化除非有酸中毒。</li>
                    </ul>
                 </div>
@@ -303,10 +303,10 @@ export default function App() {
                 <div className="md:col-span-2 bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-slate-200">
                    <h3 className="font-bold mb-4 flex items-center gap-2"><ShieldAlert size={18} className="text-indigo-500"/> 实验室诊断标准 (Cairo-Bishop)</h3>
                    <div className="grid grid-cols-2 gap-4">
-                      <MetricBox label="血尿酸" val="> 476 umol/L" desc="或增加 25%" />
-                      <MetricBox label="血钾" val="> 6.0 mmol/L" desc="或增加 25%" />
-                      <MetricBox label="血磷" val="> 2.1 mmol/L" desc="或增加 25%" />
-                      <MetricBox label="血钙" val="< 1.75 mmol/L" desc="或减少 25%" />
+                      <MetricBox label="血尿酸" val="&gt; 476 umol/L" desc="或增加 25%" />
+                      <MetricBox label="血钾" val="&gt; 6.0 mmol/L" desc="或增加 25%" />
+                      <MetricBox label="血磷" val="&gt; 2.1 mmol/L" desc="或增加 25%" />
+                      <MetricBox label="血钙" val="&lt; 1.75 mmol/L" desc="或减少 25%" />
                    </div>
                    <p className="mt-4 text-[10px] text-slate-400">注：治疗前或治疗开始后 3-7 天内，符合以上 2 项或以上即可诊断实验室 TLS。</p>
                 </div>
@@ -330,7 +330,7 @@ export default function App() {
                    <div className="space-y-2">
                       <span className="px-2 py-1 bg-indigo-700 rounded text-[10px] font-bold uppercase">第一步</span>
                       <h4 className="font-bold">强力水化</h4>
-                      <p className="text-xs opacity-80 leading-relaxed">3L/m².d，不含钾/钙/磷。维持尿量 > 100ml/m²/h。</p>
+                      <p className="text-xs opacity-80 leading-relaxed">3L/m².d，不含钾/钙/磷。维持尿量 &gt; 100ml/m²/h。</p>
                    </div>
                    <div className="space-y-2">
                       <span className="px-2 py-1 bg-indigo-700 rounded text-[10px] font-bold uppercase">第二步</span>
@@ -373,8 +373,8 @@ export default function App() {
              <header><h2 className="text-2xl font-bold text-slate-800">CNSL 诊断与防治</h2></header>
              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-slate-200"><h4 className="font-bold text-slate-800 mb-2">CNS1</h4><p className="text-xs text-slate-500">CSF 无细胞</p></div>
-                <div className="bg-amber-50/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-amber-200"><h4 className="font-bold text-amber-800 mb-2">CNS2</h4><p className="text-xs text-amber-600">WBC < 5 且可见细胞</p></div>
-                <div className="bg-red-50/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-red-200"><h4 className="font-bold text-red-800 mb-2">CNS3</h4><p className="text-xs text-red-600">WBC >= 5 且可见细胞</p></div>
+                <div className="bg-amber-50/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-amber-200"><h4 className="font-bold text-amber-800 mb-2">CNS2</h4><p className="text-xs text-amber-600">WBC &lt; 5 且可见细胞</p></div>
+                <div className="bg-red-50/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-slate-200"><h4 className="font-bold text-red-800 mb-2">CNS3</h4><p className="text-xs text-red-600">WBC &ge; 5 且可见细胞</p></div>
              </div>
           </div>
         )}
@@ -441,7 +441,7 @@ export default function App() {
                   <div className="p-2 border rounded">7~8kg: 1.8mg tid</div>
                   <div className="p-2 border rounded">8~9kg: 2.4mg tid</div>
                   <div className="p-2 border rounded">9~10kg: 2.8mg tid</div>
-                  <div className="p-2 border rounded">>=50kg: 20mg qd</div>
+                  <div className="p-2 border rounded">&ge;50kg: 20mg qd</div>
                 </div>
               </div>
               <div className="p-4 bg-slate-50 text-center"><button onClick={() => setShowDoseTable(false)} className="px-8 py-2 bg-slate-800 text-white rounded-xl font-bold">关闭</button></div>
@@ -537,9 +537,9 @@ function MrdInput({ label, value, onChange, info }: any) {
 }
 
 function MrdLegend({ d15, d33, w12 }: any) {
-  if (d15) return <div className="space-y-1"><b>d15 标准:</b><br/><span className="text-red-500">HR: >=10%</span><br/><span>IR: 0.1-10%</span></div>;
-  if (d33) return <div className="space-y-1"><b>d33 标准:</b><br/><span className="text-red-500">HR: >=1%</span><br/><span>IR: 0.01-1%</span></div>;
-  return <div className="space-y-1"><b>W12 标准:</b><br/><span className="text-red-500">HR: >=0.01%</span></div>;
+  if (d15) return <div className="space-y-1"><b>d15 标准:</b><br/><span className="text-red-500">HR: &ge; 10%</span><br/><span>IR: 0.1-10%</span></div>;
+  if (d33) return <div className="space-y-1"><b>d33 标准:</b><br/><span className="text-red-500">HR: &ge; 1%</span><br/><span>IR: 0.01-1%</span></div>;
+  return <div className="space-y-1"><b>W12 标准:</b><br/><span className="text-red-500">HR: &ge; 0.01%</span></div>;
 }
 
 function StomatitisGrade({ grade, ctcae, treatment, danger, alert }: any) {
