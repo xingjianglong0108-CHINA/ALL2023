@@ -1,5 +1,5 @@
 {
-  "name": "SCCCG-ALL-2023 危险度决策工具",
+  "name": "SCCCG-ALL-2023决策工具",
   "description": "基于华南地区儿童癌症协作组（SCCCG）2023方案的急性淋巴细胞白血病（ALL）临床危险度分层决策支持系统，旨在辅助医生根据临床特征、遗传学和治疗反应快速确定风险等级。",
   "requestFramePermissions": []
 }
