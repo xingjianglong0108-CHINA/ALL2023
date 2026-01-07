@@ -381,7 +381,7 @@ export default function App() {
                       <h3 className="text-[10px] font-black uppercase tracking-widest mb-4 opacity-70">血栓风险评估</h3>
                       <div className="space-y-4">
                          <div className="flex items-center justify-between border-b border-current border-opacity-10 pb-2">
-                            <span className="text-xs font-bold">高龄风险 (年龄 > 10)</span>
+                            <span className="text-xs font-bold">高龄风险 (年龄 &gt; 10)</span>
                             {coagAssessment.isHighAgeRisk ? <CheckCircle2 size={16}/> : <X size={16}/>}
                          </div>
                          <div className="flex items-center justify-between border-b border-current border-opacity-10 pb-2">
