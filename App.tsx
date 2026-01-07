@@ -6,7 +6,7 @@ import {
   Activity, Dna, User, Microscope, AlertCircle, RefreshCw, HelpCircle, 
   Stethoscope, X, Clock, FlaskConical, ShieldCheck, Target, Droplets, 
   LayoutDashboard, ShieldAlert, Table as TableIcon, Smile, Waves, AlertTriangle,
-  Zap, Info, Flame, Brain, CheckCircle2, ChevronRight
+  Zap, Info, Flame, Brain, CheckCircle2, ChevronRight, Calculator, ListChecks, Syringe
 } from 'lucide-react';
 
 const PROTOCOL_DETAILS = {
@@ -76,6 +76,11 @@ export default function App() {
   // MPAL 专用状态
   const [mpalMarkers, setMpalMarkers] = useState<Record<string, boolean>>({});
 
+  // CNSL 判定专用状态
+  const [csfWbc, setCsfWbc] = useState<number | ''>('');
+  const [hasBlasts, setHasBlasts] = useState(false);
+  const [hasCranialNervePalsy, setHasCranialNervePalsy] = useState(false);
+
   const riskResult = useMemo(() => evaluateRisk(data), [data]);
   const currentProtocol = PROTOCOL_DETAILS[riskResult.level] || PROTOCOL_DETAILS[RiskLevel.PENDING];
 
@@ -100,6 +105,18 @@ export default function App() {
 
     return { isMyeloid, isB, isT, isMPAL, lineages, monoCount };
   }, [mpalMarkers]);
+
+  // CNSL 实时判定结论
+  const cnslConclusion = useMemo(() => {
+    if (hasCranialNervePalsy) return { level: 'CNS3', color: 'text-red-600', bg: 'bg-red-50', border: 'border-red-200', desc: '存在脑神经麻痹，直接判定为 CNS3 (CNSL)' };
+    if (csfWbc === '' || csfWbc === 0) {
+       return hasBlasts ? { level: 'CNS2', color: 'text-amber-600', bg: 'bg-amber-50', border: 'border-amber-200', desc: 'WBC < 5/μL 但可见原始细胞' } : { level: 'CNS1', color: 'text-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-200', desc: '无原始细胞' };
+    }
+    if (csfWbc < 5) {
+       return hasBlasts ? { level: 'CNS2', color: 'text-amber-600', bg: 'bg-amber-50', border: 'border-amber-200', desc: 'WBC < 5/μL 且可见原始细胞' } : { level: 'CNS1', color: 'text-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-200', desc: '无原始细胞' };
+    }
+    return hasBlasts ? { level: 'CNS3', color: 'text-red-600', bg: 'bg-red-50', border: 'border-red-200', desc: 'WBC ≥ 5/μL 且可见原始细胞 (CNSL)' } : { level: 'CNS1', color: 'text-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-200', desc: 'WBC ≥ 5/μL 但无原始细胞' };
+  }, [csfWbc, hasBlasts, hasCranialNervePalsy]);
 
   const toggleMpalMarker = (id: string) => {
     setMpalMarkers(prev => ({ ...prev, [id]: !prev[id] }));
@@ -340,6 +357,168 @@ export default function App() {
           </div>
         )}
 
+        {/* CNSL 诊断与防治版块 (完善后) */}
+        {activeTab === 'cnsl' && (
+          <div className="max-w-5xl mx-auto space-y-6 animate-in slide-in-from-right-8 duration-500 pb-20">
+             <header className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                  <h2 className="text-2xl font-bold text-slate-800">CNSL 诊断与防治 (V2.0)</h2>
+                  <p className="text-slate-500 text-sm">中枢神经系统白血病的判定标准与三联鞘注方案</p>
+                </div>
+                <div className="flex gap-2">
+                  <span className="px-3 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold rounded-full border border-emerald-200">CNS1: 正常</span>
+                  <span className="px-3 py-1 bg-amber-100 text-amber-700 text-[10px] font-bold rounded-full border border-amber-200">CNS2: 警戒</span>
+                  <span className="px-3 py-1 bg-red-100 text-red-700 text-[10px] font-bold rounded-full border border-red-200">CNS3: 确诊 (CNSL)</span>
+                </div>
+             </header>
+
+             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* 判定工具卡片 */}
+                <div className="lg:col-span-2 space-y-6">
+                   <section className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
+                      <div className="flex items-center gap-2 mb-6">
+                        <div className="p-2 bg-blue-100 text-blue-600 rounded-xl"><Calculator size={20}/></div>
+                        <h3 className="font-bold text-slate-800">CNS 状态判定辅助</h3>
+                      </div>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="space-y-6">
+                          <div>
+                            <label className="text-xs font-black text-slate-400 uppercase mb-2 block">脑脊液 WBC 计数 (cells/μL)</label>
+                            <input 
+                              type="number" 
+                              value={csfWbc} 
+                              onChange={e => setCsfWbc(e.target.value === '' ? '' : Number(e.target.value))}
+                              placeholder="输入计数..."
+                              className="w-full text-3xl font-black text-slate-700 py-2 border-b-2 border-slate-100 focus:border-blue-500 outline-none transition-all"
+                            />
+                          </div>
+                          
+                          <div className="space-y-3">
+                             <label className="flex items-center gap-3 p-4 rounded-2xl bg-slate-50 border border-slate-100 cursor-pointer hover:bg-white hover:border-blue-200 transition-all group">
+                                <input type="checkbox" checked={hasBlasts} onChange={e => setHasBlasts(e.target.checked)} className="w-5 h-5 rounded text-blue-600"/>
+                                <div>
+                                   <p className="text-sm font-bold text-slate-700 group-hover:text-blue-700 transition-colors">可见原始细胞 (Blasts)</p>
+                                   <p className="text-[10px] text-slate-400">脑脊液离心沉淀涂片发现</p>
+                                </div>
+                             </label>
+
+                             <label className="flex items-center gap-3 p-4 rounded-2xl bg-slate-50 border border-slate-100 cursor-pointer hover:bg-white hover:border-red-200 transition-all group">
+                                <input type="checkbox" checked={hasCranialNervePalsy} onChange={e => setHasCranialNervePalsy(e.target.checked)} className="w-5 h-5 rounded text-red-600"/>
+                                <div>
+                                   <p className="text-sm font-bold text-slate-700 group-hover:text-red-700 transition-colors">脑神经麻痹</p>
+                                   <p className="text-[10px] text-slate-400">需除外其他原因导致的瘫痪</p>
+                                </div>
+                             </label>
+                          </div>
+                        </div>
+
+                        <div className={`p-8 rounded-3xl border-2 flex flex-col items-center justify-center text-center transition-all duration-500 ${cnslConclusion.bg} ${cnslConclusion.border}`}>
+                           <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">判定结论</p>
+                           <h4 className={`text-4xl font-black mb-2 ${cnslConclusion.color}`}>{cnslConclusion.level}</h4>
+                           <p className="text-sm font-bold text-slate-700 px-4 leading-snug">{cnslConclusion.desc}</p>
+                           
+                           <div className="mt-6 flex gap-1">
+                              {[1,2,3].map(i => (
+                                <div key={i} className={`w-8 h-1 rounded-full ${cnslConclusion.level === 'CNS'+i ? (i===1?'bg-emerald-500':i===2?'bg-amber-500':'bg-red-500') : 'bg-slate-200 opacity-30'}`} />
+                              ))}
+                           </div>
+                        </div>
+                      </div>
+                   </section>
+
+                   <section className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
+                      <div className="flex items-center gap-2 mb-6">
+                        <div className="p-2 bg-indigo-100 text-indigo-600 rounded-xl"><Syringe size={20}/></div>
+                        <h3 className="font-bold text-slate-800">三联鞘注 (TIT) 标准剂量</h3>
+                      </div>
+                      
+                      <div className="overflow-hidden border border-slate-100 rounded-2xl">
+                        <table className="w-full text-left">
+                          <thead className="bg-slate-50">
+                            <tr>
+                              <th className="px-4 py-3 text-[10px] font-black text-slate-400 uppercase">年龄段</th>
+                              <th className="px-4 py-3 text-[10px] font-black text-blue-600 uppercase">MTX (mg)</th>
+                              <th className="px-4 py-3 text-[10px] font-black text-emerald-600 uppercase">Ara-C (mg)</th>
+                              <th className="px-4 py-3 text-[10px] font-black text-amber-600 uppercase">Dex (mg)</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-slate-50 text-xs font-bold text-slate-600">
+                            <tr className="hover:bg-slate-50 transition-colors">
+                              <td className="px-4 py-4">小于 1 岁</td><td className="px-4 py-4">6</td><td className="px-4 py-4">15</td><td className="px-4 py-4">2</td>
+                            </tr>
+                            <tr className="hover:bg-slate-50 transition-colors">
+                              <td className="px-4 py-4">1 ~ 2 岁</td><td className="px-4 py-4">8</td><td className="px-4 py-4">20</td><td className="px-4 py-4">2</td>
+                            </tr>
+                            <tr className="hover:bg-slate-50 transition-colors bg-blue-50/30">
+                              <td className="px-4 py-4">2 ~ 3 岁</td><td className="px-4 py-4">10</td><td className="px-4 py-4">25</td><td className="px-4 py-4">5</td>
+                            </tr>
+                            <tr className="hover:bg-slate-50 transition-colors">
+                              <td className="px-4 py-4">大于 3 岁</td><td className="px-4 py-4">12</td><td className="px-4 py-4">30</td><td className="px-4 py-4">5</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <p className="mt-4 text-[10px] text-slate-400 italic">备注：由于 V2.0 方案优化，HD-MTX 期间的鞘注可根据情况调整。注意：MTX 需避光使用。</p>
+                   </section>
+                </div>
+
+                {/* 右侧明细卡片 */}
+                <div className="space-y-6">
+                   <section className="bg-slate-900 text-white rounded-3xl p-6 shadow-xl border border-slate-800">
+                      <h3 className="text-xs font-black uppercase tracking-widest text-blue-400 mb-6 flex items-center gap-2">
+                        <ListChecks size={16}/> 防治方案要点
+                      </h3>
+                      
+                      <div className="space-y-6">
+                         <div className="relative pl-6 border-l border-slate-700">
+                            <div className="absolute -left-1.5 top-0 w-3 h-3 bg-blue-500 rounded-full border-2 border-slate-900 shadow-sm shadow-blue-500/50" />
+                            <h4 className="text-sm font-black mb-1">预防性方案 (Prophylaxis)</h4>
+                            <ul className="text-[10px] text-slate-400 space-y-1">
+                               <li>• 诱导期：d1, d15, d33 (TIT × 3)</li>
+                               <li>• 巩固期：HD-MTX 前均需 TIT</li>
+                               <li>• 维持期：每 8~12 周一次 TIT</li>
+                               <li className="text-blue-400 mt-1 font-bold">总计：LR 13~14次 / IR&HR 18~22次</li>
+                            </ul>
+                         </div>
+
+                         <div className="relative pl-6 border-l border-slate-700">
+                            <div className="absolute -left-1.5 top-0 w-3 h-3 bg-red-500 rounded-full border-2 border-slate-900 shadow-sm shadow-red-500/50" />
+                            <h4 className="text-sm font-black mb-1">治疗性方案 (Treatment)</h4>
+                            <p className="text-[10px] text-slate-400 leading-relaxed mb-2">
+                               针对 CNS2/CNS3/TLM+ 的强化治疗：
+                            </p>
+                            <div className="p-3 bg-slate-800 rounded-xl border border-slate-700">
+                               <p className="text-[10px] font-bold text-red-400">TIT 每周 2 次，直至 CSF 正常 × 2</p>
+                               <p className="text-[10px] text-slate-400 mt-1">随后每 1~2 周一次巩固，直至进入维持期转为常规。</p>
+                            </div>
+                         </div>
+                         
+                         <div className="p-4 bg-amber-900/20 border border-amber-500/30 rounded-2xl">
+                            <h4 className="text-[10px] font-black text-amber-400 uppercase mb-2 flex items-center gap-1"><AlertTriangle size={12}/> CRT 放射治疗指征</h4>
+                            <p className="text-[10px] text-amber-200/70 leading-relaxed">
+                               1. 确诊 CNS3 的 T-ALL 或 HR-B-ALL。<br/>
+                               2. 诱导结束 CSF 未转阴。<br/>
+                               3. 建议年龄 &gt; 2 岁，剂量 12~18 Gy。
+                            </p>
+                         </div>
+                      </div>
+                   </section>
+
+                   <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm">
+                      <h4 className="text-[10px] font-black text-slate-400 uppercase mb-3 flex items-center gap-2"><Info size={14} className="text-blue-500"/> 穿刺损伤 (Traumatic LP)</h4>
+                      <p className="text-[10px] text-slate-600 leading-relaxed mb-3">
+                         定义：CSF 中 RBC &ge; 10/μL 且可见原始细胞。
+                      </p>
+                      <div className="text-[10px] font-bold p-3 bg-blue-50 rounded-xl text-blue-800 border border-blue-100">
+                         处理建议：建议在后续 IT 时追加 Ara-C 或 Dex 的剂量，并在下次 IT 前确保复查 CSF 结果。注意止血药的使用。
+                      </div>
+                   </div>
+                </div>
+             </div>
+          </div>
+        )}
+
         {/* 凝血管理模块 (同步 V2.0 附件七) */}
         {activeTab === 'coagulation' && (
           <div className="max-w-4xl mx-auto space-y-6 animate-in slide-in-from-right-8 duration-500">
@@ -416,17 +595,6 @@ export default function App() {
              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                <TargetOption title="JAK-STAT 通路" drug="芦克替尼" color="indigo" fusions="CRLF2, JAK1/2/3, IL7R" dosage="10-15mg/m² BID"/>
                <TargetOption title="ABL 家族重排" drug="达沙替尼" color="blue" fusions="ABL1/2, CSF1R, PDGFRB" dosage="60-80mg/m² QD"/>
-             </div>
-          </div>
-        )}
-
-        {activeTab === 'cnsl' && (
-          <div className="max-w-4xl mx-auto space-y-6 animate-in slide-in-from-right-8 duration-500">
-             <header><h2 className="text-2xl font-bold text-slate-800">CNSL 诊断分级</h2></header>
-             <div className="grid grid-cols-3 gap-4">
-                <div className="p-4 bg-white border rounded-2xl"><h4 className="font-bold">CNS1</h4><p className="text-[10px]">CSF 无细胞</p></div>
-                <div className="p-4 bg-amber-50 border border-amber-200 rounded-2xl"><h4 className="font-bold">CNS2</h4><p className="text-[10px]">WBC &lt; 5 且可见细胞</p></div>
-                <div className="p-4 bg-red-50 border border-red-200 rounded-2xl"><h4 className="font-bold">CNS3</h4><p className="text-[10px]">WBC &ge; 5 且可见细胞</p></div>
              </div>
           </div>
         )}
