@@ -6,7 +6,7 @@ import {
   Activity, Dna, User, Microscope, AlertCircle, RefreshCw, HelpCircle, 
   Stethoscope, X, Clock, FlaskConical, ShieldCheck, Target, Droplets, 
   LayoutDashboard, ShieldAlert, Table as TableIcon, Smile, Waves, AlertTriangle,
-  Zap, Info, Flame, Brain
+  Zap, Info, Flame, Brain, CheckCircle2, ChevronRight
 } from 'lucide-react';
 
 const PROTOCOL_DETAILS = {
@@ -42,14 +42,38 @@ const PROTOCOL_DETAILS = {
 
 type AppTab = 'risk' | 'mpal' | 'cnsl' | 'phlike' | 'coagulation' | 'stomatitis' | 'hyperleukemia' | 'tls';
 
+// MPAL 标记物定义
+const MPAL_MARKERS = {
+  MYELOID: [
+    { id: 'mpo', label: 'MPO (强度>50%)', type: 'myeloid' },
+  ],
+  MONOCYTE: [
+    { id: 'cd11c', label: 'CD11c', type: 'monocyte' },
+    { id: 'cd14', label: 'CD14', type: 'monocyte' },
+    { id: 'cd64', label: 'CD64', type: 'monocyte' },
+    { id: 'cd11b', label: 'CD11b', type: 'monocyte' },
+    { id: 'lysozyme', label: '溶菌酶 (Lysozyme)', type: 'monocyte' },
+  ],
+  B_LINEAGE: [
+    { id: 'cd19_strong', label: 'CD19 (强阳性)', type: 'b' },
+    { id: 'ccd79a', label: 'cCD79a', type: 'b' },
+    { id: 'ccd22', label: 'cCD22', type: 'b' },
+    { id: 'cd10', label: 'CD10', type: 'b' },
+  ],
+  T_LINEAGE: [
+    { id: 'ccd3', label: 'cCD3 (胞浆)', type: 't' },
+  ]
+};
+
 export default function App() {
   const [activeTab, setActiveTab] = useState<AppTab>('risk');
   const [data, setData] = useState<PatientData>(initialPatientState);
   const [showProtocol, setShowProtocol] = useState(false);
-  const [showDoseTable, setShowDoseTable] = useState(false);
-
+  
   const [fibValue, setFibValue] = useState<number | ''>('');
   const [at3Value, setAt3Value] = useState<number | ''>('');
+  
+  // MPAL 专用状态
   const [mpalMarkers, setMpalMarkers] = useState<Record<string, boolean>>({});
 
   const riskResult = useMemo(() => evaluateRisk(data), [data]);
@@ -57,6 +81,28 @@ export default function App() {
 
   const handleChange = (field: keyof PatientData, value: any) => {
     setData(prev => ({ ...prev, [field]: value }));
+  };
+
+  // MPAL 判定逻辑
+  const mpalAnalysis = useMemo(() => {
+    const monoCount = ['cd11c', 'cd14', 'cd64', 'cd11b', 'lysozyme'].filter(m => mpalMarkers[m]).length;
+    
+    const isMyeloid = !!mpalMarkers['mpo'] || monoCount >= 2;
+    const isB = !!mpalMarkers['cd19_strong'] || (['ccd79a', 'ccd22', 'cd10'].filter(m => mpalMarkers[m]).length >= 1);
+    const isT = !!mpalMarkers['ccd3'];
+
+    const lineages = [];
+    if (isMyeloid) lineages.push('Myeloid (髓系)');
+    if (isB) lineages.push('B-lineage (B系)');
+    if (isT) lineages.push('T-lineage (T系)');
+
+    const isMPAL = lineages.length >= 2;
+
+    return { isMyeloid, isB, isT, isMPAL, lineages, monoCount };
+  }, [mpalMarkers]);
+
+  const toggleMpalMarker = (id: string) => {
+    setMpalMarkers(prev => ({ ...prev, [id]: !prev[id] }));
   };
 
   return (
@@ -217,6 +263,83 @@ export default function App() {
           </div>
         )}
 
+        {/* MPAL 判定模块 (WHO 2022) */}
+        {activeTab === 'mpal' && (
+          <div className="max-w-5xl mx-auto space-y-6 animate-in slide-in-from-right-8 duration-500">
+             <header className="flex justify-between items-end">
+                <div>
+                  <h2 className="text-2xl font-bold text-slate-800">MPAL 判定模块 (WHO 2022)</h2>
+                  <p className="text-slate-500 text-sm">混合表型急性白血病判定工具</p>
+                </div>
+                <button onClick={() => setMpalMarkers({})} className="text-xs font-bold text-slate-400 hover:text-blue-600 flex items-center gap-1">
+                  <RefreshCw size={12}/> 重置标记物
+                </button>
+             </header>
+
+             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="lg:col-span-2 space-y-4">
+                  <MpalMarkerGroup title="髓系标记 (Myeloid)" markers={MPAL_MARKERS.MYELOID} selected={mpalMarkers} onToggle={toggleMpalMarker} color="orange" />
+                  <MpalMarkerGroup title="单核细胞分化 (Monocyte)" markers={MPAL_MARKERS.MONOCYTE} selected={mpalMarkers} onToggle={toggleMpalMarker} color="amber" subtitle="满足 2 项或以上判定单核分化" />
+                  <MpalMarkerGroup title="B 淋巴系 (B-lineage)" markers={MPAL_MARKERS.B_LINEAGE} selected={mpalMarkers} onToggle={toggleMpalMarker} color="blue" subtitle="CD19(强) 或其他标记满足条件" />
+                  <MpalMarkerGroup title="T 淋巴系 (T-lineage)" markers={MPAL_MARKERS.T_LINEAGE} selected={mpalMarkers} onToggle={toggleMpalMarker} color="purple" />
+                </div>
+
+                <div className="space-y-6">
+                  <section className={`p-6 rounded-3xl border-2 transition-all ${mpalAnalysis.isMPAL ? 'bg-blue-600 border-blue-400 shadow-blue-200 text-white' : 'bg-white border-slate-200 text-slate-800'} shadow-xl`}>
+                    <h3 className={`text-xs font-black uppercase tracking-widest mb-4 opacity-70 ${mpalAnalysis.isMPAL ? 'text-blue-100' : 'text-slate-400'}`}>判定结论</h3>
+                    <div className="flex items-center gap-3 mb-6">
+                      {mpalAnalysis.isMPAL ? <CheckCircle2 size={32} className="text-white"/> : <HelpCircle size={32} className="text-slate-300"/>}
+                      <div>
+                        <p className={`text-2xl font-black ${mpalAnalysis.isMPAL ? 'text-white' : 'text-slate-400'}`}>
+                          {mpalAnalysis.isMPAL ? '符合 MPAL' : '不符合 MPAL'}
+                        </p>
+                        <p className={`text-[10px] font-bold ${mpalAnalysis.isMPAL ? 'text-blue-100' : 'text-slate-400'}`}>
+                          基于 WHO 2022 分型标准
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-3">
+                       <div className={`p-3 rounded-xl flex items-center justify-between ${mpalAnalysis.isMyeloid ? (mpalAnalysis.isMPAL ? 'bg-blue-700' : 'bg-orange-50 text-orange-700') : 'bg-slate-50 text-slate-300'}`}>
+                         <span className="text-xs font-black">髓系判定</span>
+                         {mpalAnalysis.isMyeloid ? <span className="text-[10px] font-bold">Positive</span> : <X size={12}/>}
+                       </div>
+                       <div className={`p-3 rounded-xl flex items-center justify-between ${mpalAnalysis.isB ? (mpalAnalysis.isMPAL ? 'bg-blue-700' : 'bg-blue-50 text-blue-700') : 'bg-slate-50 text-slate-300'}`}>
+                         <span className="text-xs font-black">B系判定</span>
+                         {mpalAnalysis.isB ? <span className="text-[10px] font-bold">Positive</span> : <X size={12}/>}
+                       </div>
+                       <div className={`p-3 rounded-xl flex items-center justify-between ${mpalAnalysis.isT ? (mpalAnalysis.isMPAL ? 'bg-blue-700' : 'bg-purple-50 text-purple-700') : 'bg-slate-50 text-slate-300'}`}>
+                         <span className="text-xs font-black">T系判定</span>
+                         {mpalAnalysis.isT ? <span className="text-[10px] font-bold">Positive</span> : <X size={12}/>}
+                       </div>
+                    </div>
+
+                    {mpalAnalysis.isMPAL && (
+                      <div className="mt-6 pt-6 border-t border-blue-500/30">
+                        <p className="text-[10px] font-bold mb-2 opacity-80 uppercase">受累谱系：</p>
+                        <div className="flex flex-wrap gap-2">
+                           {mpalAnalysis.lineages.map(l => (
+                             <span key={l} className="px-2 py-1 bg-white/20 rounded text-[10px] font-black">{l}</span>
+                           ))}
+                        </div>
+                      </div>
+                    )}
+                  </section>
+
+                  <div className="p-4 bg-amber-50 border border-amber-100 rounded-2xl">
+                    <h4 className="text-[10px] font-black text-amber-800 uppercase mb-2 flex items-center gap-1"><Info size={12}/> WHO 2022 逻辑备注</h4>
+                    <p className="text-[10px] text-amber-700 leading-relaxed italic">
+                      1. 髓系判定：MPO 阳性（流式/IHC）或满足单核细胞系标准。<br/>
+                      2. 单核标准：NSE、CD11c、CD14、CD64、溶菌酶中至少 2 项阳性。<br/>
+                      3. T系标准：cCD3 强阳性。<br/>
+                      4. B系标准：CD19 强阳性。
+                    </p>
+                  </div>
+                </div>
+             </div>
+          </div>
+        )}
+
         {/* 凝血管理模块 (同步 V2.0 附件七) */}
         {activeTab === 'coagulation' && (
           <div className="max-w-4xl mx-auto space-y-6 animate-in slide-in-from-right-8 duration-500">
@@ -254,7 +377,7 @@ export default function App() {
           </div>
         )}
 
-        {/* 其他 Tab 保持结构，更新文本即可 */}
+        {/* 其他 Tab 内容... */}
         {activeTab === 'stomatitis' && (
           <div className="max-w-4xl mx-auto space-y-6 animate-in slide-in-from-right-8 duration-500">
              <header><h2 className="text-2xl font-bold text-slate-800">口腔炎分级处理</h2></header>
@@ -265,7 +388,6 @@ export default function App() {
           </div>
         )}
 
-        {/* 高白Tab */}
         {activeTab === 'hyperleukemia' && (
           <div className="max-w-4xl mx-auto space-y-6 animate-in slide-in-from-right-8 duration-500">
              <header><h2 className="text-2xl font-bold text-slate-800">高白处理 (WBC &gt; 100)</h2></header>
@@ -278,7 +400,6 @@ export default function App() {
           </div>
         )}
 
-        {/* TLS Tab */}
         {activeTab === 'tls' && (
           <div className="max-w-4xl mx-auto space-y-6 animate-in slide-in-from-right-8 duration-500">
              <header><h2 className="text-2xl font-bold text-slate-800">肿瘤溶解综合征 (TLS)</h2></header>
@@ -289,7 +410,6 @@ export default function App() {
           </div>
         )}
         
-        {/* Ph-like Tab */}
         {activeTab === 'phlike' && (
           <div className="max-w-4xl mx-auto space-y-6 animate-in slide-in-from-right-8 duration-500">
              <header><h2 className="text-2xl font-bold text-slate-800">Ph-like 靶向用药 (V2.0)</h2></header>
@@ -300,22 +420,6 @@ export default function App() {
           </div>
         )}
 
-        {/* MPAL Tab */}
-        {activeTab === 'mpal' && (
-          <div className="max-w-4xl mx-auto space-y-6 animate-in slide-in-from-right-8 duration-500">
-             <header><h2 className="text-2xl font-bold text-slate-800">MPAL 判定 (WHO 2022)</h2></header>
-             <div className="bg-white p-6 rounded-2xl border border-slate-200">
-                <p className="text-xs text-slate-500 mb-4 font-bold">髓系判定：MPO 强度超过成熟中性粒细胞 50% 或两个单核标志阳性。</p>
-                <div className="grid grid-cols-3 gap-2">
-                   {['MPO+', 'CD11c+', 'CD14+', 'CD64+', 'cCD3+', 'CD19强+'].map(m => (
-                     <button key={m} className="p-3 border rounded-xl text-[10px] font-bold hover:bg-slate-50">{m}</button>
-                   ))}
-                </div>
-             </div>
-          </div>
-        )}
-
-        {/* CNSL Tab */}
         {activeTab === 'cnsl' && (
           <div className="max-w-4xl mx-auto space-y-6 animate-in slide-in-from-right-8 duration-500">
              <header><h2 className="text-2xl font-bold text-slate-800">CNSL 诊断分级</h2></header>
@@ -356,7 +460,48 @@ export default function App() {
   );
 }
 
-/* --- 辅助组件 (保持原有功能，修复 JSX 符号) --- */
+/* --- 辅助组件 --- */
+
+function MpalMarkerGroup({ title, subtitle, markers, selected, onToggle, color }: any) {
+  const colorStyles: any = {
+    orange: 'bg-orange-50 border-orange-100 text-orange-900',
+    amber: 'bg-amber-50 border-amber-100 text-amber-900',
+    blue: 'bg-blue-50 border-blue-100 text-blue-900',
+    purple: 'bg-purple-50 border-purple-100 text-purple-900'
+  };
+
+  const btnActiveStyles: any = {
+    orange: 'bg-orange-500 text-white border-orange-600',
+    amber: 'bg-amber-500 text-white border-amber-600',
+    blue: 'bg-blue-500 text-white border-blue-600',
+    purple: 'bg-purple-500 text-white border-purple-600'
+  };
+
+  return (
+    <section className={`p-5 rounded-2xl border ${colorStyles[color]} transition-all`}>
+      <div className="mb-3">
+        <h3 className="text-xs font-black uppercase tracking-wider">{title}</h3>
+        {subtitle && <p className="text-[10px] opacity-60 font-bold">{subtitle}</p>}
+      </div>
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+        {markers.map((m: any) => (
+          <button
+            key={m.id}
+            onClick={() => onToggle(m.id)}
+            className={`px-3 py-2 rounded-xl text-[10px] font-black border transition-all text-left flex items-center justify-between ${
+              selected[m.id] 
+                ? btnActiveStyles[color]
+                : 'bg-white/50 border-slate-200 text-slate-600 hover:bg-white'
+            }`}
+          >
+            {m.label}
+            {selected[m.id] && <CheckCircle2 size={10}/>}
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+}
 
 function NavButton({ active, onClick, icon, label }: { active: boolean, onClick: () => void, icon: React.ReactNode, label: string }) {
   return (
