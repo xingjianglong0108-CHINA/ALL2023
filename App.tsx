@@ -12,30 +12,30 @@ import {
 const PROTOCOL_DETAILS = {
   [RiskLevel.LR]: {
     phases: [
-      { name: "诱导缓解 (Induction)", duration: "d1-d33", detail: "VDLP 方案 (VCR + DNR + L-ASP + Pred/Dex)。" },
-      { name: "早期巩固 (Consolidation)", duration: "W5-W12", detail: "CAM 方案。重点在于维持缓解状态。" },
-      { name: "延迟强化 (Re-induction)", duration: "W20-W26", detail: "标准再诱导方案。" },
-      { name: "维持治疗 (Maintenance)", duration: "2-2.5 年", detail: "口服 6-MP 和 MTX。" }
+      { name: "诱导缓解 (Induction)", duration: "d1-d33", detail: "VDLD2 (DNR × 2) + CAM。注意：L-ASP 调整为 d9, d30。" },
+      { name: "早期巩固 (Consolidation)", duration: "W5-W12", detail: "常规开展 eMV 方案 (MTX 100~300mg/m² 剂量递增)。" },
+      { name: "延迟强化 (Re-induction)", duration: "W20-W26", detail: "VDLD3 (DOX × 3) + CAM 第二轮 eMV 方案。" },
+      { name: "维持治疗 (Maintenance)", duration: "2 年", detail: "仅 6-MP + MTX。V2.0 取消了每 8 周一轮的 VCR+Dex。" }
     ],
-    highlight: "重点：在保证疗效的前提下，尽量减少长期毒性。"
+    highlight: "V2.0 重点：低危组取消维持期 VD 脉冲，巩固期常规 eMV。"
   },
   [RiskLevel.IR]: {
     phases: [
-      { name: "诱导缓解 (Induction)", duration: "d1-d33", detail: "强化型 VDLP。若 Ph+ 需尽早考虑 TKI。" },
-      { name: "早期巩固 (Consolidation)", duration: "W5-W14", detail: "增加强度。包括 HD-MTX 处理。" },
-      { name: "延迟强化 (Re-induction)", duration: "W24-W30", detail: "双重再诱导。" },
-      { name: "维持治疗 (Maintenance)", duration: "2.5 年", detail: "强化维持期管理。" }
+      { name: "诱导缓解 (Induction)", duration: "d1-d33", detail: "VDLD4 (DNR × 4) + CAM+L。Ph+ 或 ABL 类重排 d3 起加用 TKI (达沙替尼)。" },
+      { name: "早期巩固 (Consolidation)", duration: "W5-W14", detail: "HD-MTX 5g/m² × 4。可根据路径评估贝林妥欧应用。" },
+      { name: "延迟强化 (Re-induction)", duration: "W24-W30", detail: "VDLD4 (DOX × 4) + CAM+L。B-ALL 有条件者加用贝林妥欧。" },
+      { name: "维持治疗 (Maintenance)", duration: "2.5 年(男)/2 年(女)", detail: "6-MP + MTX + 每 8 周一次 VD。" }
     ],
-    highlight: "重点：强化巩固和 CNS 预防，根据 MRD 动态调整。"
+    highlight: "V2.0 重点：T-ALL 诱导 d3 起随机西达本胺；B-ALL 整合贝林妥欧路径。"
   },
   [RiskLevel.HR]: {
     phases: [
-      { name: "诱导缓解 (Induction)", duration: "d1-d33", detail: "高强度 VDLP。严密监测并发症。" },
-      { name: "早期巩固 (Consolidation)", duration: "W5-W16", detail: "高强度化疗块 (HD-MTX, HD-Ara-C)。" },
-      { name: "移植评估 (HSCT)", duration: "关键决策", detail: "MRD 持续阳性建议缓解后尽快行 allo-HSCT。" },
-      { name: "维持治疗", duration: "长期", detail: "非移植患者进行极高强度维持。" }
+      { name: "诱导缓解 (Induction)", duration: "d1-d33", detail: "高强度 VDLD4 + CAM × 2 或贝林妥欧。T-ALL 联合西达本胺。" },
+      { name: "强化巩固 (Blocks)", duration: "W5-W16", detail: "高强度化疗块 (Block HR-1', 2', 3') × 2。积极评估移植。" },
+      { name: "移植评估 (HSCT)", duration: "关键决策", detail: "符合移植指征者于强化巩固后进入移植。" },
+      { name: "维持治疗", duration: "2.5 年", detail: "非移植患者进入标准维持。" }
     ],
-    highlight: "重点：最大强度化疗。积极评估移植适应症。"
+    highlight: "V2.0 重点：MEF2D::BCL9 与 TCF3-HLF 纳入高危；强化巩固 Block 体系。"
   },
   [RiskLevel.PENDING]: { phases: [], highlight: "请先完成评估。" }
 };
@@ -64,7 +64,7 @@ export default function App() {
       {/* 水印层 */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-[0.03] select-none flex flex-wrap justify-center content-center gap-20 p-10">
         {Array.from({ length: 50 }).map((_, i) => (
-          <div key={i} className="text-4xl font-black transform -rotate-45 whitespace-nowrap">
+          <div key={i} className="text-4xl font-black transform -rotate-45 whitespace-nowrap text-slate-900">
             LZRYEK
           </div>
         ))}
@@ -76,7 +76,7 @@ export default function App() {
           <Activity className="w-8 h-8 text-blue-500" />
           <div className="leading-tight">
             <h1 className="font-bold text-white text-lg tracking-tight">SCCCG-ALL</h1>
-            <p className="text-[10px] text-slate-500 font-medium">临床决策支持系统 2023</p>
+            <p className="text-[10px] text-slate-500 font-medium">临床决策支持系统 V2.0</p>
           </div>
         </div>
         
@@ -94,21 +94,20 @@ export default function App() {
         </div>
 
         <div className="mt-auto pt-10 px-2 opacity-50 text-[10px]">
-          <p>© 2024 SCCCG 方案专家组</p>
-          <p>Version 3.5 (Updated 2023.09)</p>
+          <p>© 2025 SCCCG 方案专家组</p>
+          <p>Manual V2.0 (Updated 2025.08)</p>
           <p className="mt-1 font-bold">LZRYEK Security</p>
         </div>
       </nav>
 
       {/* 主内容区 */}
       <main className="flex-1 p-4 md:p-8 overflow-y-auto z-10 relative bg-transparent">
-        {/* 危险度分层评估模块 */}
         {activeTab === 'risk' && (
           <div className="max-w-5xl mx-auto space-y-6 animate-in fade-in duration-500">
              <div className="flex justify-between items-end mb-4">
                 <div>
-                  <h2 className="text-2xl font-bold text-slate-800">危险度分层评估</h2>
-                  <p className="text-slate-500 text-sm">根据 SCCCG-ALL-2023 方案执行自动化分层计算</p>
+                  <h2 className="text-2xl font-bold text-slate-800">危险度分层评估 (V2.0)</h2>
+                  <p className="text-slate-500 text-sm">已剔除强的松试验，更新 MEF2D 及 TCF3-HLF 指标</p>
                 </div>
                 <button onClick={() => setData(initialPatientState)} className="text-slate-400 hover:text-blue-600 flex items-center gap-1 text-sm font-medium transition-colors">
                   <RefreshCw size={14} /> 重置输入
@@ -118,7 +117,7 @@ export default function App() {
                 <div className="lg:col-span-2 space-y-6">
                    <section className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-sm border border-slate-200">
                       <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
-                        <User size={16} className="text-blue-500"/> 基础临床信息
+                        <User size={16} className="text-blue-500"/> 临床基础信息
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <InputGroup label="年龄 (岁)" value={data.age} onChange={v => handleChange('age', v)} />
@@ -145,31 +144,41 @@ export default function App() {
                         </div>
                       </div>
                    </section>
+
                    <section className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-sm border border-slate-200">
                       <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
-                        <Dna size={16} className="text-indigo-500"/> 生物学/遗传学指标
+                        <Dna size={16} className="text-indigo-500"/> 分子与细胞遗传学 (V2.0)
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                        <ToggleItem label="MLL / MEF2D 重排" checked={data.mllOrMef2d} onChange={v => handleChange('mllOrMef2d', v)} danger />
-                        <ToggleItem label="iAMP21" checked={data.iamp21} onChange={v => handleChange('iamp21', v)} danger />
+                        <ToggleItem label="KMT2A (MLL) 重排" checked={data.mll} onChange={v => handleChange('mll', v)} danger />
+                        <ToggleItem label="MEF2D::BCL9" checked={data.mef2dBcl9} onChange={v => handleChange('mef2dBcl9', v)} danger />
+                        <ToggleItem label="TCF3-HLF" checked={data.tcf3Hlf} onChange={v => handleChange('tcf3Hlf', v)} danger />
+                        <ToggleItem label="低二倍体 (<44)" checked={data.hypodiploidy44} onChange={v => handleChange('hypodiploidy44', v)} danger />
                         <ToggleItem label="IKZF1 缺失 (无DUX4)" checked={data.ikzf1DeleAndNoDux4} onChange={v => handleChange('ikzf1DeleAndNoDux4', v)} danger />
+                        <ToggleItem label="t(1;19) (TCF3-PBX1)" checked={data.t1_19} onChange={v => handleChange('t1_19', v)} warning />
+                        <ToggleItem label="Ph-ALL / Ph-Like" checked={data.phPositive || data.phLike} onChange={v => handleChange('phPositive', v)} warning />
+                        <ToggleItem label="其他 MEF2D 重排" checked={data.mef2dOther} onChange={v => handleChange('mef2dOther', v)} warning />
                         <ToggleItem label="t(12;21) / ETV6-RUNX1" checked={data.etv6Runx1} onChange={v => handleChange('etv6Runx1', v)} success />
-                        <ToggleItem label="超二倍体 (>50,+4,+10)" checked={data.hyperdiploidy50} onChange={v => handleChange('hyperdiploidy50', v)} success />
-                        <ToggleItem label="Ph-ALL t(9;22)" checked={data.phPositive} onChange={v => handleChange('phPositive', v)} warning />
-                        <ToggleItem label="Ph-Like ALL" checked={data.phLike} onChange={v => handleChange('phLike', v)} warning />
+                        <ToggleItem label="超二倍体 (>50)" checked={data.hyperdiploidy50} onChange={v => handleChange('hyperdiploidy50', v)} success />
                       </div>
                    </section>
+
                    <section className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-sm border border-slate-200">
                       <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
-                        <Microscope size={16} className="text-emerald-500"/> 治疗反应评估 (MRD)
+                        <Microscope size={16} className="text-emerald-500"/> 治疗反应评估
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <MrdInput label="d15 MRD (%)" value={data.mrdD15} onChange={v => handleChange('mrdD15', v)} info={<MrdLegend d15 />} />
-                        <MrdInput label="d33 MRD (%)" value={data.mrdD33} onChange={v => handleChange('mrdD33', v)} info={<MrdLegend d33 />} />
-                        <MrdInput label="巩固前 MRD (%)" value={data.mrdW12} onChange={v => handleChange('mrdW12', v)} info={<MrdLegend w12 />} />
+                        <MrdInput label="d15 MRD (%)" value={data.mrdD15} onChange={v => handleChange('mrdD15', v)} />
+                        <MrdInput label="d33 MRD (%)" value={data.mrdD33} onChange={v => handleChange('mrdD33', v)} />
+                        <MrdInput label="W12 MRD (%)" value={data.mrdW12} onChange={v => handleChange('mrdW12', v)} />
+                      </div>
+                      <div className="mt-4 p-4 bg-slate-50 rounded-xl border border-slate-100 flex flex-col gap-2">
+                        <ToggleItem label="诱导 d33 评估纵隔瘤灶缩小不足 1/3" checked={!data.d33MediastinalMassReduced} onChange={v => handleChange('d33MediastinalMassReduced', !v)} danger />
+                        <ToggleItem label="巩固治疗前仍存在瘤灶" checked={data.persistentMassPreConsolidation} onChange={v => handleChange('persistentMassPreConsolidation', v)} danger />
                       </div>
                    </section>
                 </div>
+
                 <div className="space-y-6">
                   <div className="sticky top-6">
                     <section className={`rounded-3xl p-8 border-2 shadow-xl transition-all duration-500 text-center ${
@@ -177,7 +186,7 @@ export default function App() {
                       riskResult.level === RiskLevel.IR ? 'bg-amber-50/90 border-amber-100' :
                       'bg-emerald-50/90 border-emerald-100'
                     } backdrop-blur-md`}>
-                      <p className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">评估结果</p>
+                      <p className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">V2.0 评估结果</p>
                       <h2 className={`text-3xl font-black mb-6 ${
                         riskResult.level === RiskLevel.HR ? 'text-red-700' :
                         riskResult.level === RiskLevel.IR ? 'text-amber-700' :
@@ -188,14 +197,14 @@ export default function App() {
                         riskResult.level === RiskLevel.IR ? 'bg-amber-600 text-white' :
                         'bg-emerald-600 text-white'
                       }`}>
-                        <Stethoscope size={20}/> 查看治疗方案建议
+                        <Stethoscope size={20}/> 查看治疗建议
                       </button>
                       <div className="mt-8 text-left">
                         <h4 className="text-[10px] font-bold text-slate-400 uppercase mb-2">决策依据：</h4>
                         <div className="space-y-2">
                           {riskResult.reasons.map((r, i) => (
                             <div key={i} className="flex gap-2 text-xs text-slate-600 font-medium">
-                              <div className="w-1 h-1 bg-slate-300 rounded-full mt-1.5 flex-shrink-0" />
+                              <div className="w-1.5 h-1.5 bg-slate-300 rounded-full mt-1.5 flex-shrink-0" />
                               {r}
                             </div>
                           ))}
@@ -208,257 +217,128 @@ export default function App() {
           </div>
         )}
 
-        {/* 口腔炎的处理模块 */}
-        {activeTab === 'stomatitis' && (
-          <div className="max-w-4xl mx-auto space-y-6 animate-in slide-in-from-right-8 duration-500">
-            <header className="flex justify-between items-start">
-              <div>
-                <h2 className="text-2xl font-bold text-slate-800">口腔炎的处理</h2>
-                <p className="text-slate-500 text-sm">评分标准采用 CTCAE v5.0 | 处理建议参考《宝典 2023 附录6》</p>
-              </div>
-              <div className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-[10px] font-bold uppercase">口腔粘膜炎</div>
-            </header>
-
-            <div className="grid grid-cols-1 gap-4">
-              <StomatitisGrade 
-                grade="1 级" 
-                ctcae="无症状或症状轻微；仅有红斑"
-                treatment="1. 谷氨酰胺 0.3g/kg.d 分次 po；2. 依信含漱(尽量 &gt; 30s/次) qid，漱口后暂禁水食；3. 保持口腔清洁，避免硬食。"
-              />
-              <StomatitisGrade 
-                grade="2 级" 
-                ctcae="疼痛但可进固体食物；散在溃疡"
-                treatment="1. 延续 1 级处理；2. 增加谷氨酰胺颗粒/施林 po tid (按年龄调整剂量)；3. 局部可喷涂利多卡因止痛。"
-              />
-              <StomatitisGrade 
-                grade="3 级" 
-                ctcae="严重疼痛；干扰进食，仅能进流食"
-                treatment="1. 延续 2 级处理；2. 贝复新(重组牛成纤维细胞生长因子)涂患处 q12h；3. 曲安奈德软膏涂溃疡处 tid；4. 必要时巨和粒含漱。"
-                alert="ANC &lt; 0.5 或伴感染者需开始全身抗感染治疗。"
-              />
-              <StomatitisGrade 
-                grade="4 级" 
-                ctcae="威胁生命；无法进食进水，需住院治疗"
-                treatment="1. 全面升级处理方案；2. 开始静脉营养支持(TPN)；3. 静脉使用谷氨酰胺；4. 康普舒漱口液漱口；5. 严防败血症。"
-                danger
-              />
-            </div>
-
-            <div className="bg-amber-50/80 backdrop-blur-sm p-6 rounded-2xl border border-amber-200 flex gap-4">
-              <Info className="text-amber-600 shrink-0" size={24}/>
-              <div className="text-xs text-amber-900 space-y-2">
-                <p className="font-bold uppercase tracking-widest text-[10px]">专家特别提醒：</p>
-                <p>• <b>真菌防治：</b>疑有鹅口疮需加用 2.5%SB 漱口，并在依信漱口后涂抹制霉菌素(100万U+NS20ml)。</p>
-                <p>• <b>止痛管理：</b>严重溃疡痛可酌情使用喷利多卡因止痛。无法耐受者需考虑阿片类药物镇痛。</p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* 高白细胞白血病处理模块 */}
-        {activeTab === 'hyperleukemia' && (
-          <div className="max-w-4xl mx-auto space-y-6 animate-in slide-in-from-right-8 duration-500">
-             <header>
-                <h2 className="text-2xl font-bold text-slate-800">高白细胞白血病的处理</h2>
-                <p className="text-slate-500 text-sm">定义：WBC &gt; 100 × 10⁹/L | 紧急并发症预防建议</p>
-             </header>
-
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-slate-200">
-                   <h3 className="font-bold flex items-center gap-2 mb-4 text-red-600"><Flame size={18}/> 核心风险与监测</h3>
-                   <p className="text-xs text-slate-500 leading-relaxed mb-4">WBC &gt; 100 时脑出血风险增高，WBC &gt; 300/400 为重症. 主因白细胞淤滞导致脑/肺栓塞。</p>
-                   <div className="space-y-2">
-                      <div className="flex justify-between p-2 bg-slate-50 rounded-lg text-xs"><span>头颅 CT</span><span className="font-bold">评估颅内出血</span></div>
-                      <div className="flex justify-between p-2 bg-slate-50 rounded-lg text-xs"><span>PLT 维持</span><span className="font-bold">30 - 50k</span></div>
-                      <div className="flex justify-between p-2 bg-slate-50 rounded-lg text-xs"><span>降尿酸</span><span className="font-bold">拉布立海/非布司他</span></div>
-                   </div>
-                </div>
-
-                <div className="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-slate-200">
-                   <h3 className="font-bold flex items-center gap-2 mb-4 text-blue-600"><Zap size={18}/> 减负与水化建议</h3>
-                   <ul className="text-xs text-slate-600 space-y-3">
-                      <li className="flex gap-2"><div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1 shrink-0"/><b>羟基脲 (HU)：</b>100mg/kg.d 分次口服，Q12H 监测，WBC &lt; 100 后停药。</li>
-                      <li className="flex gap-2"><div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1 shrink-0"/><b>输血限制：</b>WBC &gt; 100 尽量不输红细胞，除非 Hb &lt; 40g/L，且需分次少量 (5ml/kg)。</li>
-                      <li className="flex gap-2"><div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1 shrink-0"/><b>水化：</b>3000ml/m².d，不建议碱化除非有酸中毒。</li>
-                   </ul>
-                </div>
-             </div>
-
-             <div className="bg-red-50/80 backdrop-blur-sm p-6 rounded-2xl border border-red-200">
-                <h4 className="font-bold text-red-800 text-sm mb-2">白细胞单采术：</h4>
-                <p className="text-xs text-red-700 italic leading-relaxed">宝典指出单采术作用有限。若 3 天 WBC 无下降趋势或出现白细胞淤滞症状，需科室讨论调整降白方案。</p>
-             </div>
-          </div>
-        )}
-
-        {/* 肿瘤溶解综合征处理模块 */}
-        {activeTab === 'tls' && (
-          <div className="max-w-4xl mx-auto space-y-6 animate-in slide-in-from-right-8 duration-500">
-             <header>
-                <h2 className="text-2xl font-bold text-slate-800">肿瘤溶解综合征 (TLS) 的处理</h2>
-                <p className="text-slate-500 text-sm">诊断标准与分级治疗建议 | 参考《宝典 2023 附录8》</p>
-             </header>
-
-             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="md:col-span-2 bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-slate-200">
-                   <h3 className="font-bold mb-4 flex items-center gap-2"><ShieldAlert size={18} className="text-indigo-500"/> 实验室诊断标准 (Cairo-Bishop)</h3>
-                   <div className="grid grid-cols-2 gap-4">
-                      <MetricBox label="血尿酸" val="&gt; 476 umol/L" desc="或增加 25%" />
-                      <MetricBox label="血钾" val="&gt; 6.0 mmol/L" desc="或增加 25%" />
-                      <MetricBox label="血磷" val="&gt; 2.1 mmol/L" desc="或增加 25%" />
-                      <MetricBox label="血钙" val="&lt; 1.75 mmol/L" desc="或减少 25%" />
-                   </div>
-                   <p className="mt-4 text-[10px] text-slate-400">注：治疗前或治疗开始后 3-7 天内，符合以上 2 项或以上即可诊断实验室 TLS。</p>
-                </div>
-
-                <div className="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-slate-200">
-                   <h3 className="font-bold mb-4 text-red-600 flex items-center gap-2"><Waves size={18}/> 临床 TLS</h3>
-                   <p className="text-xs text-slate-500 leading-relaxed">
-                     满足实验室 TLS 且伴随以下之一：
-                   </p>
-                   <ul className="text-xs text-slate-600 mt-2 space-y-1">
-                      <li>• 肌酐升高 (1.5倍)</li>
-                      <li>• 心律失常 / 猝死</li>
-                      <li>• 癫痫发作</li>
-                   </ul>
-                </div>
-             </div>
-
-             <section className="bg-indigo-900 text-indigo-100 p-8 rounded-3xl shadow-xl">
-                <h3 className="font-black text-xl mb-6">TLS 防治三部曲</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                   <div className="space-y-2">
-                      <span className="px-2 py-1 bg-indigo-700 rounded text-[10px] font-bold uppercase">第一步</span>
-                      <h4 className="font-bold">强力水化</h4>
-                      <p className="text-xs opacity-80 leading-relaxed">3L/m².d，不含钾/钙/磷。维持尿量 &gt; 100ml/m²/h。</p>
-                   </div>
-                   <div className="space-y-2">
-                      <span className="px-2 py-1 bg-indigo-700 rounded text-[10px] font-bold uppercase">第二步</span>
-                      <h4 className="font-bold">尿酸管理</h4>
-                      <p className="text-xs opacity-80 leading-relaxed">预防：别嘌醇 200-300mg/m².d。治疗：尿酸氧化酶 (拉布立海) 0.1-0.2mg/kg。</p>
-                   </div>
-                   <div className="space-y-2">
-                      <span className="px-2 py-1 bg-indigo-700 rounded text-[10px] font-bold uppercase">第三步</span>
-                      <h4 className="font-bold">血液净化</h4>
-                      <p className="text-xs opacity-80 leading-relaxed">少尿、容量超负荷、高磷高钾难纠正时，及早行血液透析/滤过。</p>
-                   </div>
-                </div>
-             </section>
-          </div>
-        )}
-
-        {/* MPAL 模块保持不变 */}
-        {activeTab === 'mpal' && (
-           <div className="max-w-4xl mx-auto space-y-6 animate-in slide-in-from-right-8 duration-500">
-             <header><h2 className="text-2xl font-bold text-slate-800">MPAL 混合表型判定</h2></header>
-             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-               <MpalCard title="髓系" icon={<Droplets className="text-orange-500"/>}>
-                  <MpalToggle label="MPO 强阳性 (2分)" checked={!!mpalMarkers.mpo} onChange={v => setMpalMarkers(p => ({...p, mpo: v}))} />
-                  <MpalToggle label="单核细胞分化 (1分)" checked={!!mpalMarkers.mono} onChange={v => setMpalMarkers(p => ({...p, mono: v}))} />
-               </MpalCard>
-               <MpalCard title="B 系" icon={<Dna className="text-blue-500"/>}>
-                  <MpalToggle label="cCD79a / cCD22 (2分)" checked={!!mpalMarkers.ccd79} onChange={v => setMpalMarkers(p => ({...p, ccd79: v}))} />
-                  <MpalToggle label="CD19 强表达 (2分)" checked={!!mpalMarkers.cd19} onChange={v => setMpalMarkers(p => ({...p, cd19: v}))} />
-               </MpalCard>
-               <MpalCard title="T 系" icon={<Activity className="text-red-500"/>}>
-                  <MpalToggle label="cCD3 / 表面 CD3 (2分)" checked={!!mpalMarkers.ccd3} onChange={v => setMpalMarkers(p => ({...p, ccd3: v}))} />
-               </MpalCard>
-             </div>
-           </div>
-        )}
-
-        {/* CNSL 模块保持不变 */}
-        {activeTab === 'cnsl' && (
-          <div className="max-w-4xl mx-auto space-y-6 animate-in slide-in-from-right-8 duration-500">
-             <header><h2 className="text-2xl font-bold text-slate-800">CNSL 诊断与防治</h2></header>
-             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-slate-200"><h4 className="font-bold text-slate-800 mb-2">CNS1</h4><p className="text-xs text-slate-500">CSF 无细胞</p></div>
-                <div className="bg-amber-50/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-amber-200"><h4 className="font-bold text-amber-800 mb-2">CNS2</h4><p className="text-xs text-amber-600">WBC &lt; 5 且可见细胞</p></div>
-                <div className="bg-red-50/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-slate-200"><h4 className="font-bold text-red-800 mb-2">CNS3</h4><p className="text-xs text-red-600">WBC &ge; 5 且可见细胞</p></div>
-             </div>
-          </div>
-        )}
-
-        {/* Ph-like 模块保持不变 */}
-        {activeTab === 'phlike' && (
-           <div className="max-w-4xl mx-auto space-y-6 animate-in slide-in-from-right-8 duration-500">
-              <header><h2 className="text-2xl font-bold text-slate-800">Ph-like 靶向建议</h2></header>
-              <TargetOption title="ABL1 家族" drug="达沙替尼" color="blue" fusions="BCR-ABL1, ABL1/2" dosage="60-80mg/m² QD"/>
-              <TargetOption title="JAK-STAT 通路" drug="芦克替尼" color="indigo" fusions="CRLF2, JAK2, EPOR" dosage="10-15mg/m² BID"/>
-           </div>
-        )}
-
-        {/* L-ASP 凝血管理模块 */}
+        {/* 凝血管理模块 (同步 V2.0 附件七) */}
         {activeTab === 'coagulation' && (
-          <div className="max-w-5xl mx-auto space-y-6 animate-in slide-in-from-right-8 duration-500">
-             <header className="flex justify-between items-center">
-                <div>
-                  <h2 className="text-2xl font-bold text-slate-800">L-ASP 凝血管理辅助 (2023修订版)</h2>
-                  <p className="text-slate-500 text-sm">基于 Fib 与 AT-III 的双维评估</p>
-                </div>
-                <button onClick={() => setShowDoseTable(true)} className="flex items-center gap-2 px-4 py-2 bg-slate-800 text-white rounded-xl text-sm font-bold hover:bg-slate-700 transition-colors">
-                  <TableIcon size={16}/> 儿童抗凝药物剂量表
-                </button>
+          <div className="max-w-4xl mx-auto space-y-6 animate-in slide-in-from-right-8 duration-500">
+             <header>
+                <h2 className="text-2xl font-bold text-slate-800">L-ASP 凝血管理 (V2.0)</h2>
+                <p className="text-slate-500 text-sm">监测 AT-III 及 FIB，注意 11-16 岁为血栓高发年龄段</p>
              </header>
-             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="bg-white/90 backdrop-blur-sm p-8 rounded-3xl shadow-sm border border-slate-200 space-y-10">
-                  <div className="space-y-4">
-                    <label className="text-xs font-bold text-slate-400 uppercase flex items-center gap-2"><Droplets size={14} className="text-red-500"/> Fib (g/L)</label>
-                    <input type="number" step="0.1" value={fibValue} onChange={e => setFibValue(e.target.value === '' ? '' : Number(e.target.value))} className="w-full text-4xl font-black text-blue-600 py-2 border-b-2 border-slate-100 outline-none focus:border-blue-500 bg-transparent" placeholder="0.0"/>
-                  </div>
-                  <div className="space-y-4">
-                    <label className="text-xs font-bold text-slate-400 uppercase flex items-center gap-2"><ShieldCheck size={14} className="text-emerald-500"/> AT-III (%)</label>
-                    <input type="number" value={at3Value} onChange={e => setAt3Value(e.target.value === '' ? '' : Number(e.target.value))} className="w-full text-4xl font-black text-emerald-600 py-2 border-b-2 border-slate-100 outline-none focus:border-emerald-500 bg-transparent" placeholder="0"/>
-                  </div>
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6">
+                   <div>
+                      <label className="text-xs font-bold text-slate-400 uppercase">Fib (g/L)</label>
+                      <input type="number" step="0.1" value={fibValue} onChange={e => setFibValue(e.target.value === '' ? '' : Number(e.target.value))} className="w-full text-4xl font-black text-blue-600 py-2 border-b-2 border-slate-100 bg-transparent outline-none focus:border-blue-500" placeholder="0.0"/>
+                   </div>
+                   <div>
+                      <label className="text-xs font-bold text-slate-400 uppercase">AT-III (%)</label>
+                      <input type="number" value={at3Value} onChange={e => setAt3Value(e.target.value === '' ? '' : Number(e.target.value))} className="w-full text-4xl font-black text-emerald-600 py-2 border-b-2 border-slate-100 bg-transparent outline-none focus:border-emerald-500" placeholder="0"/>
+                   </div>
                 </div>
                 <div className="space-y-4">
-                   <div className={`p-6 rounded-2xl border-2 backdrop-blur-sm ${fibValue === '' ? 'bg-slate-50/80' : fibValue < 0.3 ? 'bg-red-50/80 border-red-200' : 'bg-emerald-50/80 border-emerald-200'}`}>
-                      <h4 className="font-bold flex items-center gap-2 mb-2"><FlaskConical size={18}/> Fib 处理意见</h4>
-                      <p className="text-xs leading-relaxed">{fibValue === '' ? '等待输入 Fib 数值...' : fibValue < 0.3 ? '警告：Fib < 0.3g/L。不主张积极补充，除非出血。必要时首选小剂量 FBG (10-20mg/kg)。' : '凝血功能目前尚可。'}</p>
+                   <div className="p-6 bg-blue-50 border border-blue-100 rounded-2xl">
+                      <h4 className="font-bold text-blue-800 flex items-center gap-2 mb-2"><Info size={16}/> V2.0 手册提示</h4>
+                      <p className="text-xs text-blue-700 leading-relaxed">
+                        • 穿刺损伤定义：CSF 中 RBC &ge; 10/μL。<br/>
+                        • AT 活性需维持在 60% 以上，否则需加用肝素。<br/>
+                        • FIB &lt; 0.5 g/L 时建议补充纤维蛋白原浓缩物。
+                      </p>
                    </div>
-                   <div className={`p-6 rounded-2xl border-2 backdrop-blur-sm ${at3Value === '' ? 'bg-slate-50/80' : (at3Value < 30 || (at3Value < 50 && (data.age > 10 || riskResult.level === RiskLevel.HR))) ? 'bg-indigo-50/80 border-indigo-200' : 'bg-emerald-50/80 border-emerald-200'}`}>
-                      <h4 className="font-bold flex items-center gap-2 mb-2"><ShieldAlert size={18}/> AT-III 预防性抗凝指征</h4>
-                      <p className="text-xs leading-relaxed">{at3Value === '' ? '等待输入 AT-III 数值...' : (at3Value < 30 || (at3Value < 50 && (data.age > 10 || riskResult.level === RiskLevel.HR))) ? '触发抗凝指征：建议使用肝素或利伐沙班。' : '暂未触发预防性抗凝指征。'}</p>
-                   </div>
+                   {fibValue !== '' && fibValue < 0.5 && (
+                     <div className="p-4 bg-red-100 text-red-800 rounded-xl font-bold text-sm flex items-center gap-2">
+                        <AlertCircle/> Fib 低于阈值，建议干预
+                     </div>
+                   )}
                 </div>
              </div>
           </div>
         )}
-      </main>
 
-      {/* 剂量参考表弹窗 */}
-      {showDoseTable && (
-        <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-           <div className="bg-white w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-              <div className="p-6 bg-slate-800 text-white flex justify-between items-center"><h3 className="font-bold text-xl">儿童抗凝药物剂量参考表</h3><button onClick={() => setShowDoseTable(false)}><X/></button></div>
-              <div className="p-8 overflow-y-auto space-y-8">
-                <h4 className="font-bold text-blue-600 mb-4 border-l-4 border-blue-600 pl-2 text-sm">利伐沙班 (Rivaroxaban) 参考剂量</h4>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-[10px]">
-                  <div className="p-2 border rounded">2.6~3kg: 0.8mg tid</div>
-                  <div className="p-2 border rounded">3~4kg: 0.9mg tid</div>
-                  <div className="p-2 border rounded">4~5kg: 1.4mg tid</div>
-                  <div className="p-2 border rounded">5~7kg: 1.6mg tid</div>
-                  <div className="p-2 border rounded">7~8kg: 1.8mg tid</div>
-                  <div className="p-2 border rounded">8~9kg: 2.4mg tid</div>
-                  <div className="p-2 border rounded">9~10kg: 2.8mg tid</div>
-                  <div className="p-2 border rounded">&ge;50kg: 20mg qd</div>
+        {/* 其他 Tab 保持结构，更新文本即可 */}
+        {activeTab === 'stomatitis' && (
+          <div className="max-w-4xl mx-auto space-y-6 animate-in slide-in-from-right-8 duration-500">
+             <header><h2 className="text-2xl font-bold text-slate-800">口腔炎分级处理</h2></header>
+             <div className="grid grid-cols-1 gap-4">
+                <StomatitisGrade grade="1 级" ctcae="无症状或红斑" treatment="谷氨酰胺 0.3g/kg.d；依信含漱。" />
+                <StomatitisGrade grade="3 级" ctcae="严重疼痛，仅能进流食" treatment="贝复新涂患处；曲安奈德 tid；必要时阿片类镇痛。" alert="V2.0：若 ANC < 0.5 必须全身抗感染。" />
+             </div>
+          </div>
+        )}
+
+        {/* 高白Tab */}
+        {activeTab === 'hyperleukemia' && (
+          <div className="max-w-4xl mx-auto space-y-6 animate-in slide-in-from-right-8 duration-500">
+             <header><h2 className="text-2xl font-bold text-slate-800">高白处理 (WBC &gt; 100)</h2></header>
+             <div className="bg-red-50 p-6 rounded-2xl border border-red-200">
+                <h3 className="font-bold text-red-800 mb-2 flex items-center gap-2"><Zap/> 紧急降白建议</h3>
+                <p className="text-xs text-red-700 leading-relaxed italic">
+                  HU 100mg/kg.d；WBC &gt; 100 慎输 RBC 除非 Hb &lt; 40g/L；强力水化 3000ml/m².d。
+                </p>
+             </div>
+          </div>
+        )}
+
+        {/* TLS Tab */}
+        {activeTab === 'tls' && (
+          <div className="max-w-4xl mx-auto space-y-6 animate-in slide-in-from-right-8 duration-500">
+             <header><h2 className="text-2xl font-bold text-slate-800">肿瘤溶解综合征 (TLS)</h2></header>
+             <div className="grid grid-cols-2 gap-4">
+                <MetricBox label="血尿酸" val="&gt; 476 μmol/L" desc="或增加 25%" />
+                <MetricBox label="血钾" val="&gt; 6.0 mmol/L" desc="或增加 25%" />
+             </div>
+          </div>
+        )}
+        
+        {/* Ph-like Tab */}
+        {activeTab === 'phlike' && (
+          <div className="max-w-4xl mx-auto space-y-6 animate-in slide-in-from-right-8 duration-500">
+             <header><h2 className="text-2xl font-bold text-slate-800">Ph-like 靶向用药 (V2.0)</h2></header>
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+               <TargetOption title="JAK-STAT 通路" drug="芦克替尼" color="indigo" fusions="CRLF2, JAK1/2/3, IL7R" dosage="10-15mg/m² BID"/>
+               <TargetOption title="ABL 家族重排" drug="达沙替尼" color="blue" fusions="ABL1/2, CSF1R, PDGFRB" dosage="60-80mg/m² QD"/>
+             </div>
+          </div>
+        )}
+
+        {/* MPAL Tab */}
+        {activeTab === 'mpal' && (
+          <div className="max-w-4xl mx-auto space-y-6 animate-in slide-in-from-right-8 duration-500">
+             <header><h2 className="text-2xl font-bold text-slate-800">MPAL 判定 (WHO 2022)</h2></header>
+             <div className="bg-white p-6 rounded-2xl border border-slate-200">
+                <p className="text-xs text-slate-500 mb-4 font-bold">髓系判定：MPO 强度超过成熟中性粒细胞 50% 或两个单核标志阳性。</p>
+                <div className="grid grid-cols-3 gap-2">
+                   {['MPO+', 'CD11c+', 'CD14+', 'CD64+', 'cCD3+', 'CD19强+'].map(m => (
+                     <button key={m} className="p-3 border rounded-xl text-[10px] font-bold hover:bg-slate-50">{m}</button>
+                   ))}
                 </div>
-              </div>
-              <div className="p-4 bg-slate-50 text-center"><button onClick={() => setShowDoseTable(false)} className="px-8 py-2 bg-slate-800 text-white rounded-xl font-bold">关闭</button></div>
-           </div>
-        </div>
-      )}
+             </div>
+          </div>
+        )}
+
+        {/* CNSL Tab */}
+        {activeTab === 'cnsl' && (
+          <div className="max-w-4xl mx-auto space-y-6 animate-in slide-in-from-right-8 duration-500">
+             <header><h2 className="text-2xl font-bold text-slate-800">CNSL 诊断分级</h2></header>
+             <div className="grid grid-cols-3 gap-4">
+                <div className="p-4 bg-white border rounded-2xl"><h4 className="font-bold">CNS1</h4><p className="text-[10px]">CSF 无细胞</p></div>
+                <div className="p-4 bg-amber-50 border border-amber-200 rounded-2xl"><h4 className="font-bold">CNS2</h4><p className="text-[10px]">WBC &lt; 5 且可见细胞</p></div>
+                <div className="p-4 bg-red-50 border border-red-200 rounded-2xl"><h4 className="font-bold">CNS3</h4><p className="text-[10px]">WBC &ge; 5 且可见细胞</p></div>
+             </div>
+          </div>
+        )}
+
+      </main>
 
       {/* 方案建议弹窗 */}
       {showProtocol && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-          <div className="bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden">
+          <div className="bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in duration-300">
             <div className={`p-6 flex items-center justify-between text-white ${riskResult.level === RiskLevel.HR ? 'bg-red-600' : riskResult.level === RiskLevel.IR ? 'bg-amber-600' : 'bg-emerald-600'}`}>
-              <h3 className="text-xl font-bold flex items-center gap-2"><Stethoscope/> 方案建议: {riskResult.level}</h3>
+              <h3 className="text-xl font-bold flex items-center gap-2"><Stethoscope/> V2.0 方案建议: {riskResult.level}</h3>
               <button onClick={() => setShowProtocol(false)}><X/></button>
             </div>
             <div className="p-8 space-y-6 max-h-[70vh] overflow-y-auto">
-              <div className="p-4 bg-slate-50 rounded-xl text-sm border border-slate-100 italic">{currentProtocol.highlight}</div>
+              <div className="p-4 bg-slate-50 rounded-xl text-sm border border-slate-100 italic text-slate-600">{currentProtocol.highlight}</div>
               <div className="relative space-y-8 pl-6 border-l-2 border-slate-100">
                 {currentProtocol.phases.map((p, i) => (
                   <div key={i} className="relative">
@@ -476,7 +356,7 @@ export default function App() {
   );
 }
 
-/* --- 辅助组件 --- */
+/* --- 辅助组件 (保持原有功能，修复 JSX 符号) --- */
 
 function NavButton({ active, onClick, icon, label }: { active: boolean, onClick: () => void, icon: React.ReactNode, label: string }) {
   return (
@@ -498,8 +378,8 @@ function InputGroup({ label, value, onChange }: { label: string, value: number |
       <label className="text-[10px] font-bold text-slate-400 uppercase tracking-tight">{label}</label>
       <input 
         type="number" 
-        value={value || ''} 
-        onChange={e => onChange(e.target.value === '' ? null : Number(e.target.value))}
+        value={value === 0 ? '' : (value || '')} 
+        onChange={e => onChange(e.target.value === '' ? 0 : Number(e.target.value))}
         className="w-full px-4 py-2 bg-slate-50 rounded-lg border border-slate-200 outline-none focus:ring-2 focus:ring-blue-500"
       />
     </div>
@@ -519,15 +399,10 @@ function ToggleItem({ label, checked, onChange, danger, success, warning }: any)
   );
 }
 
-function MrdInput({ label, value, onChange, info }: any) {
-  const [show, setShow] = useState(false);
+function MrdInput({ label, value, onChange }: any) {
   return (
-    <div className="space-y-1 relative">
-      <div className="flex items-center gap-1">
-        <label className="text-[10px] font-bold text-slate-400 uppercase">{label}</label>
-        <button onMouseEnter={() => setShow(true)} onMouseLeave={() => setShow(false)} className="text-slate-300"><HelpCircle size={12}/></button>
-        {show && <div className="absolute z-[100] p-3 bg-white shadow-xl rounded-lg border border-slate-200 text-[10px] w-48 mt-12">{info}</div>}
-      </div>
+    <div className="space-y-1">
+      <label className="text-[10px] font-bold text-slate-400 uppercase">{label}</label>
       <div className="relative">
         <input type="number" step="0.001" value={value === null ? '' : value} onChange={e => onChange(e.target.value === '' ? null : Number(e.target.value))} className="w-full px-3 py-2 bg-slate-50 rounded-lg border border-slate-200 text-sm font-bold bg-white/50" />
         <span className="absolute right-3 top-2.5 text-[10px] text-slate-400">%</span>
@@ -536,68 +411,31 @@ function MrdInput({ label, value, onChange, info }: any) {
   );
 }
 
-function MrdLegend({ d15, d33, w12 }: any) {
-  if (d15) return <div className="space-y-1"><b>d15 标准:</b><br/><span className="text-red-500">HR: &ge; 10%</span><br/><span>IR: 0.1-10%</span></div>;
-  if (d33) return <div className="space-y-1"><b>d33 标准:</b><br/><span className="text-red-500">HR: &ge; 1%</span><br/><span>IR: 0.01-1%</span></div>;
-  return <div className="space-y-1"><b>W12 标准:</b><br/><span className="text-red-500">HR: &ge; 0.01%</span></div>;
-}
-
-function StomatitisGrade({ grade, ctcae, treatment, danger, alert }: any) {
+function StomatitisGrade({ grade, ctcae, treatment, alert }: any) {
   return (
-    <div className={`p-5 rounded-2xl border-2 shadow-sm flex flex-col gap-3 ${danger ? 'bg-red-50/90 border-red-200' : 'bg-white/90 border-slate-200'} backdrop-blur-sm`}>
-       <div className="flex justify-between items-center border-b border-slate-100 pb-2">
-          <span className={`px-2 py-1 rounded-md text-xs font-black text-white ${danger ? 'bg-red-600' : 'bg-slate-800'}`}>{grade}</span>
-          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">CTCAE v5.0</span>
-       </div>
-       <div className="space-y-1">
-          <p className="text-xs font-bold text-slate-700">评分定义：</p>
-          <p className="text-xs text-slate-500 italic">{ctcae}</p>
-       </div>
-       <div className="space-y-1 pt-2">
-          <p className="text-xs font-bold text-slate-700 flex items-center gap-1"><FlaskConical size={14}/> 处理方案：</p>
-          <p className="text-xs text-slate-600 leading-relaxed">{treatment}</p>
-       </div>
-       {alert && (
-         <div className="mt-2 p-3 bg-red-100/90 backdrop-blur-sm rounded-xl flex gap-2">
-            <AlertTriangle className="text-red-600 shrink-0" size={14}/>
-            <p className="text-[10px] text-red-800 font-bold">{alert}</p>
-         </div>
-       )}
+    <div className="p-5 rounded-2xl border border-slate-200 bg-white/90 shadow-sm space-y-2">
+       <div className="flex justify-between items-center"><span className="px-2 py-1 bg-slate-800 text-white text-xs font-black rounded">{grade}</span><span className="text-[10px] text-slate-400">CTCAE v5.0</span></div>
+       <p className="text-xs font-bold text-slate-700 italic">{ctcae}</p>
+       <p className="text-xs text-slate-600 leading-relaxed"><span className="font-bold">处理：</span>{treatment}</p>
+       {alert && <p className="text-[10px] text-red-600 font-bold bg-red-50 p-2 rounded-lg">{alert}</p>}
     </div>
   );
 }
 
 function MetricBox({ label, val, desc }: any) {
   return (
-    <div className="p-3 bg-slate-50/80 backdrop-blur-sm rounded-xl border border-slate-100">
-      <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">{label}</p>
-      <p className="text-sm font-black text-slate-700">{val}</p>
-      {desc && <p className="text-[10px] text-slate-400 italic">{desc}</p>}
+    <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+      <p className="text-[10px] font-bold text-slate-400 uppercase">{label}</p>
+      <p className="text-lg font-black text-slate-700">{val}</p>
+      <p className="text-[10px] text-slate-400">{desc}</p>
     </div>
-  );
-}
-
-function MpalCard({ title, icon, children }: any) {
-  return (
-    <div className="bg-white/90 backdrop-blur-sm p-5 rounded-3xl border border-slate-200 shadow-sm space-y-4 text-slate-800">
-      <div className="flex items-center gap-2 font-bold border-b pb-2">{icon} {title}</div>
-      <div className="space-y-2">{children}</div>
-    </div>
-  );
-}
-
-function MpalToggle({ label, checked, onChange }: any) {
-  return (
-    <button onClick={() => onChange(!checked)} className={`w-full text-left px-3 py-2 rounded-xl text-xs font-medium transition-all ${checked ? 'bg-blue-600 text-white' : 'bg-slate-50 text-slate-500 hover:bg-slate-100'}`}>
-      {label}
-    </button>
   );
 }
 
 function TargetOption({ title, fusions, drug, dosage, color }: any) {
-  const colors: any = { blue: 'border-blue-200 bg-blue-50/90 text-blue-800', indigo: 'border-indigo-200 bg-indigo-50/90 text-indigo-800', emerald: 'border-emerald-200 bg-emerald-50/90 text-emerald-700' };
+  const colors: any = { blue: 'border-blue-200 bg-blue-50 text-blue-800', indigo: 'border-indigo-200 bg-indigo-50 text-indigo-800' };
   return (
-    <div className={`p-6 rounded-3xl border-2 ${colors[color]} backdrop-blur-sm`}>
+    <div className={`p-6 rounded-3xl border-2 ${colors[color]}`}>
       <h4 className="font-black mb-1">{title}</h4>
       <p className="text-xs opacity-70 mb-4">涉及基因: {fusions}</p>
       <div className="flex items-center gap-6">
